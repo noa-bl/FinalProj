@@ -5,14 +5,10 @@ from pymongo import MongoClient
 import  secrets
 from bson import ObjectId
 
-
-
-
 app = Flask(__name__, template_folder='templates')
 app.secret_key = secrets.token_hex(16)
 
 # Initialize MongoDB client outside the route to avoid reconnecting on each request
-
 client = MongoClient("mongodb://myUserAdmin:changeme@mongo:27017/?authSource=admin")
 db = client.Project
 Users = db.Users
@@ -120,6 +116,19 @@ def likePost():
         )
         app.logger.info(f"User {username} liked post {post_id}")
         return "liked", 200
+
+@app.route('/allPosts')
+def allPosts(methods=['GET', 'POST']):
+    if request.method == 'GET':
+        return render_template('allPosts.html')
+    elif request.method == 'POST':
+        session['username'] = request.form.get('username')
+        username = session['username']
+        postsNum = Posts.count_documents()
+        posts = Posts.find()
+        posts_list = list(posts)
+        return render_template('success.html', postsNum=postsNum, posts_list=posts_list, username=username)
+
 
 @app.route('/getUpdatedPosts')
 def getUpdatedPosts():
