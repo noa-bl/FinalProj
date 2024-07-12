@@ -18,6 +18,7 @@ db = client.Project
 Users = db.Users
 Posts = db.Posts
 
+
 @app.route(rule='/', methods=['GET', 'POST'])
 def index():
     if request.method == 'GET':
