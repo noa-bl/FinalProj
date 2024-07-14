@@ -1,0 +1,29 @@
+#myapp service
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "finals-chart.fullname" . }}-myapp
+spec:
+  type: ClusterIP
+  ports:
+    - port: {{ .Values.myapp.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app: {{ include "finals-chart.fullname" . }}-myapp
+
+---
+#mongo service
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "finals-chart.fullname" . }}-mongo
+spec:
+  type: ClusterIP
+  ports:
+    - port: 27017
+      protocol: TCP
+      name: mongo
+  selector:
+    app: {{ include "finals-chart.fullname" . }}-mongo

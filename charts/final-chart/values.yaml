@@ -1,0 +1,36 @@
+#myapp values
+myapp:
+  image: noabl/flask-app:latest
+  port: 5000
+  environment:
+    MONGODB_URI: "mongodb://myUserAdmin:changeme@mongo:27017/project"
+---
+#values for ingress
+ingress:
+  enabled: true
+  hostname: myapp.local
+  annotations:
+    kubernetes.io/ingress.class: nginx
+  tls: []
+  paths:
+    - path: /
+      pathType: ImplementationSpecific
+      backend:
+        serviceName: myapp
+        servicePort: 5000
+---
+#mongo values
+mongo:
+  image: mongo:latest
+  hostname: Project_mongodb
+  environment:
+    MONGO_INITDB_ROOT_USERNAME: myUserAdmin
+    MONGO_INITDB_ROOT_PASSWORD: changeme
+
+---
+#Autoscaling for hpa
+autoscaling:
+  enabled: true
+  minReplicas: 1
+  maxReplicas: 3
+  targetCPUUtilizationPercentage: 50

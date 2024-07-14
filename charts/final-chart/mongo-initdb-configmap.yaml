@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mongo-initdb
+data:
+  init-mongo.js: |
+    db.createUser({
+      user: "myUserAdmin",
+      pwd: "changeme",
+      roles: [{ role: "readWrite", db: "project" }]
+    });
